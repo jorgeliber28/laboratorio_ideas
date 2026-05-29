@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar de Inspiración · SEDEMA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fcf8f1; --ink:#243430; --soft:#5d6f67; --card:#ffffff;
+    --line:rgba(36,52,48,.10); --cream2:#f3ecdf; --accent:#e07a3f;
+    --shadow:0 8px 24px rgba(36,52,48,.10);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Nunito',system-ui,sans-serif; -webkit-font-smoothing:antialiased;}
+  .disp{font-family:'Fraunces',Georgia,serif;}
+  .wrap{max-width:1180px; margin:0 auto; padding:26px 20px 90px;}
+
+  /* Header */
+  .top{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:6px;}
+  .kick{font-weight:800; letter-spacing:.16em; text-transform:uppercase; font-size:11px; color:var(--accent);}
+  h1{font-family:'Fraunces'; font-weight:600; font-size:40px; line-height:1.04; margin:6px 0 4px; letter-spacing:-.01em;}
+  .lede{color:var(--soft); font-size:15.5px; max-width:640px;}
+  .iaBtn{background:linear-gradient(135deg,#2a9d8f,#43a047); color:#fff; border:none; border-radius:999px; font-family:'Nunito'; font-weight:800; font-size:14px; padding:12px 20px; cursor:pointer; box-shadow:var(--shadow); transition:transform .15s; white-space:nowrap;}
+  .iaBtn:hover{transform:translateY(-2px);}
+
+  /* Nav */
+  .nav{display:flex; gap:8px; flex-wrap:wrap; margin:22px 0 18px;}
+  .navb{font-family:'Nunito'; font-weight:800; font-size:14px; padding:9px 16px; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--soft); cursor:pointer; transition:all .15s;}
+  .navb:hover{border-color:var(--ink);}
+  .navb.on{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .navb .ct{background:var(--accent); color:#fff; border-radius:999px; font-size:11px; padding:0 7px; margin-left:6px;}
+
+  /* Controls */
+  .controls{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px;}
+  .search{flex:1 1 260px; font-family:'Nunito'; font-weight:600; font-size:14px; padding:11px 16px; border:1.5px solid var(--line); border-radius:999px; background:#fff; color:var(--ink); outline:none;}
+  .search:focus{border-color:#2a9d8f;}
+  .shuffle{font-family:'Nunito'; font-weight:800; font-size:14px; padding:11px 18px; border:none; border-radius:999px; background:var(--cream2); color:var(--ink); cursor:pointer;}
+  .shuffle:hover{background:#e9dfca;}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;}
+  .chip{font-family:'Nunito'; font-weight:700; font-size:13px; padding:7px 14px; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--soft); cursor:pointer; transition:all .15s;}
+  .chip.on{color:#fff; border-color:transparent;}
+
+  /* Intro banners */
+  .banner{background:linear-gradient(120deg,#fff,#fbf4e8); border:1px solid var(--line); border-radius:18px; padding:18px 22px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .banner h2{font-family:'Fraunces'; font-size:21px; margin:0 0 4px;}
+  .banner p{margin:0; color:var(--soft); font-size:14.5px;}
+
+  /* Grid */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:20px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:18px; overflow:hidden; cursor:pointer; box-shadow:var(--shadow); transition:transform .18s, box-shadow .18s; display:flex; flex-direction:column; animation:rise .45s ease both;}
+  .card:hover{transform:translateY(-5px); box-shadow:0 16px 34px rgba(36,52,48,.16);}
+  @keyframes rise{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+  .chead{height:96px; display:flex; align-items:center; justify-content:space-between; padding:0 18px; position:relative; overflow:hidden;}
+  .cphoto{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; box-shadow:inset 0 0 0 2000px rgba(0,0,0,.20);}
+  .cemoji{font-size:42px; filter:drop-shadow(0 3px 6px rgba(0,0,0,.18)); z-index:0;}
+  .ctype{font-family:'Nunito'; font-weight:800; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(0,0,0,.32); padding:4px 10px; border-radius:999px; position:relative; z-index:2;}
+
+  /* Secciones por categoría */
+  .section{margin-bottom:30px;}
+  .sechead{display:flex; align-items:center; gap:11px; margin-bottom:14px;}
+  .secdot{width:14px; height:14px; border-radius:5px; display:inline-block;}
+  .sectitle{font-family:'Fraunces'; font-weight:600; font-size:22px; margin:0;}
+  .vermas{margin-left:auto; font-family:'Nunito'; font-weight:800; font-size:13px; color:var(--accent); background:none; border:none; cursor:pointer;}
+  .vermas:hover{text-decoration:underline;}
+  .cbody{padding:15px 18px 16px; display:flex; flex-direction:column; flex:1;}
+  .ctitle{font-family:'Fraunces'; font-weight:600; font-size:18.5px; line-height:1.16; margin:0 0 6px; letter-spacing:-.01em;}
+  .cref{font-size:12.5px; color:var(--accent); font-weight:800; margin-bottom:6px;}
+  .cexp{font-size:14px; color:var(--soft); line-height:1.45; flex:1;}
+  .meters{display:flex; gap:14px; margin-top:13px;}
+  .meter{font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--soft);}
+  .dots{margin-top:3px; letter-spacing:1px; font-size:12px;}
+  .cfoot{display:flex; align-items:center; justify-content:space-between; margin-top:13px; padding-top:12px; border-top:1px solid var(--line);}
+  .ctags{display:flex; gap:6px; flex-wrap:wrap;}
+  .tag{font-size:11px; font-weight:700; color:var(--soft); background:var(--cream2); padding:3px 9px; border-radius:999px;}
+  .heart{background:none; border:none; font-size:22px; cursor:pointer; line-height:1; padding:2px; transition:transform .12s;}
+  .heart:hover{transform:scale(1.25);}
+
+  /* Empty */
+  .empty{grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--soft);}
+  .empty .disp{font-family:'Fraunces'; font-size:24px; color:var(--ink); margin-bottom:6px;}
+
+  /* Para ti */
+  .profile{background:#fff; border:1px solid var(--line); border-radius:18px; padding:18px 22px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .profile h2{font-family:'Fraunces'; font-size:20px; margin:0 0 8px;}
+  .profile .tag{background:#e7f3ee;}
+
+  /* Modal */
+  .overlay{position:fixed; inset:0; background:rgba(20,30,26,.55); display:none; align-items:center; justify-content:center; padding:20px; z-index:50; backdrop-filter:blur(3px);}
+  .overlay.on{display:flex;}
+  .modal{background:#fff; border-radius:22px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 30px 60px rgba(0,0,0,.3); animation:pop .25s ease;}
+  @keyframes pop{from{opacity:0; transform:scale(.96);} to{opacity:1; transform:scale(1);}}
+  .mhead{height:130px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;}
+  .mhead .cemoji{font-size:60px;}
+  .mclose{position:absolute; top:12px; right:14px; background:rgba(0,0,0,.4); color:#fff; border:none; width:32px; height:32px; border-radius:999px; font-size:18px; cursor:pointer; z-index:3;}
+  .mbody{padding:22px 26px 26px;}
+  .mtype{font-weight:800; font-size:11px; letter-spacing:.1em; text-transform:uppercase;}
+  .mtitle{font-family:'Fraunces'; font-weight:600; font-size:26px; line-height:1.12; margin:6px 0 4px;}
+  .mref{color:var(--accent); font-weight:800; font-size:13.5px; margin-bottom:14px;}
+  .field{margin:14px 0;}
+  .field .lab{font-weight:800; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:3px;}
+  .field .val{font-size:15px; line-height:1.5; color:var(--ink);}
+  .mmeters{display:flex; gap:22px; margin:16px 0; padding:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .mgoogle{width:100%; margin-top:18px; padding:12px; border:1.5px solid var(--line); border-radius:14px; background:#fff; color:var(--ink); font-family:'Nunito'; font-weight:800; font-size:14.5px; cursor:pointer; transition:all .15s;}
+  .mgoogle:hover{border-color:#4f7ef0; color:#4f7ef0; background:#f5f8ff;}
+  .msave{width:100%; margin-top:10px; padding:13px; border:none; border-radius:14px; background:var(--ink); color:#fff; font-family:'Nunito'; font-weight:800; font-size:15px; cursor:pointer;}
+  .msave.saved{background:#e25c4a;}
+
+  .foot{margin-top:36px; padding-top:16px; border-top:1px solid var(--line); color:var(--soft); font-size:13px;}
+  @media(max-width:600px){ h1{font-size:30px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <div class="kick">SEDEMA · TIMOG · Radar de inspiración</div>
+      <h1 class="disp">Tu radar de ideas 🛰️</h1>
+      <p class="lede">Un feed de proyectos, programas, apps, scripts, políticas y experiencias del mundo — pensadas para lo que tú haces. Cada semana cambia solo. Guarda las que te laten con ❤️.</p>
+    </div>
+    <button class="iaBtn" onclick="iaInfo()">✨ Actualizar con IA</button>
+  </div>
+
+  <div class="nav" id="nav"></div>
+
+  <div id="view"></div>
+
+  <div class="foot">
+    Tus favoritos y tus gustos se guardan en este navegador. <b>El cambio semanal ya funciona solo.</b> Cuando conectes tu API key, el botón ✨ generará ideas nuevas cada lunes en automático.
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============================================================
+   RADAR DE INSPIRACIÓN — SEDEMA
+   Standalone. Sin API key. Rotación semanal automática.
+   (Listo para migrar a Apps Script + API: ver iaInfo / TODO)
+   ============================================================ */
+
+const TIPOS = {
+  politica:      {label:"Política",      c1:"#0ea5a4", c2:"#14b8a6"},
+  programa:      {label:"Programa",      c1:"#43a047", c2:"#66bb6a"},
+  accion:        {label:"Acción",        c1:"#fb8c00", c2:"#ffb74d"},
+  app:           {label:"Aplicativo",    c1:"#4f7ef0", c2:"#7aa7f7"},
+  web:           {label:"Página web",    c1:"#8b5cf6", c2:"#a78bfa"},
+  script:        {label:"Script / Sheets", c1:"#2a9d8f", c2:"#3fb6a3"},
+  internacional: {label:"Experiencia internacional", c1:"#e25c4a", c2:"#f08a5d"},
+};
+const ORDEN = ["politica","programa","accion","app","web","script","internacional"];
+
+const IDEAS = [
+  {id:"i01",tipo:"politica",emoji:"🌳",titulo:"Cobertura Arbórea con Equidad Territorial",exp:"Metas de m² de área verde por habitante diferenciadas por alcaldía, con presupuesto etiquetado.",porque:"Le da dientes a tu Pacto por el Arbolado y a tu tabla de atribuciones.",innov:4,dif:4,imp:5,ref:"Inspirado en ForestaMi (Milán)",tech:"SIG, indicadores, presupuesto por resultados",cdmx:"Una lámina con el déficit por alcaldía como argumento de arranque.",arranque:"Calcula el m²/hab actual de cada alcaldía y fija una meta mínima común.",tags:["arbolado","equidad","metas"]},
+  {id:"i02",tipo:"politica",emoji:"💧",titulo:"Pago por Servicios Ambientales",exp:"Incentivos a ejidos y comunidades por conservar agua y carbono en el suelo de conservación.",porque:"Conecta directo con tu estrategia de ingresos autogenerados.",innov:4,dif:4,imp:5,ref:"FONAG, Quito",tech:"Fideicomiso, monitoreo satelital, padrón de beneficiarios",cdmx:"Piloto en las 3 microcuencas de mayor servicio hídrico.",arranque:"Identifica un usuario-pagador (ej. SACMEX) y una cuenca prioritaria.",tags:["agua","incentivos","comunidades"]},
+  {id:"i03",tipo:"politica",emoji:"🏗️",titulo:"Factor Verde en Licencias",exp:"Obligar a un % mínimo de superficie ecológica por predio nuevo (azoteas, suelo permeable, árboles).",porque:"La pieza normativa que potencia tu trabajo con la NADF.",innov:4,dif:3,imp:5,ref:"Biotope Area Factor, Berlín",tech:"Tabla de equivalencias, integración a licencias",cdmx:"Factor verde como requisito en manifestaciones de construcción.",arranque:"Arma la tabla de equivalencias de superficie verde por tipo.",tags:["normatividad","clima","construcción"]},
+  {id:"i04",tipo:"politica",emoji:"📐",titulo:"Estándar de Naturalización Urbana",exp:"Convertir la biodiversidad en métrica de planeación, no en discurso.",porque:"Vuelve medible tu agenda de biodiversidad urbana.",innov:4,dif:3,imp:4,ref:"City in Nature, Singapur",tech:"Índice de biodiversidad urbana, SIG",cdmx:"Adaptar el Índice de Singapur a una colonia piloto.",arranque:"Elige 5 indicadores simples y mídelos en una zona.",tags:["biodiversidad","política","métricas"]},
+  {id:"i05",tipo:"politica",emoji:"🦋",titulo:"Bonos de Biodiversidad Urbana",exp:"Mercado local de créditos: quien impacta verde compensa financiando restauración verificada.",porque:"Financiamiento creativo para restauración, ligado a ingresos propios.",innov:5,dif:4,imp:4,ref:"Biodiversity Net Gain, Inglaterra",tech:"Registro georreferenciado, verificación satelital",cdmx:"Piloto en suelo de conservación.",arranque:"Define la unidad de medida: el 'punto de biodiversidad'.",tags:["financiamiento","biodiversidad","innovación"]},
+
+  {id:"i06",tipo:"programa",emoji:"🟩",titulo:"Manzanas Verdes priorizadas por calor",exp:"Micro-infraestructura verde por manzana donde se cruza isla de calor + déficit + vulnerabilidad.",porque:"Enfoca tu iniciativa Manzanas Verdes donde más impacta.",innov:3,dif:3,imp:5,ref:"—",tech:"SIG, jardines de lluvia, arbolado",cdmx:"Empezar por las 10 manzanas más calientes y sin sombra.",arranque:"Define el criterio de priorización con 3 variables.",tags:["barrio","infraestructura verde","clima"]},
+  {id:"i07",tipo:"programa",emoji:"🐝",titulo:"Red de Jardines Polinizadores",exp:"Corredor de jardines en escuelas, camellones y azoteas alineado a tu Ley de Polinizadores.",porque:"Aterriza tu ley en territorio visible.",innov:3,dif:3,imp:4,ref:"—",tech:"Especies nativas, kit estándar, mapa de red",cdmx:"Convenio piloto con 10 escuelas.",arranque:"Diseña el kit de siembra estándar y la ficha de registro.",tags:["polinizadores","educación","biodiversidad"]},
+  {id:"i08",tipo:"programa",emoji:"🌲",titulo:"Árboles Patrimoniales: declaratorias + adopción",exp:"De inventario a régimen de protección con adopción ciudadana.",porque:"Es el siguiente paso natural de tu estrategia patrimonial.",innov:3,dif:3,imp:4,ref:"—",tech:"Padrón único, declaratoria jurídica, SIG",cdmx:"Declarar el primer lote de 10 árboles emblemáticos.",arranque:"Define la ruta jurídica de la primera declaratoria.",tags:["patrimonio","arbolado","participación"]},
+  {id:"i09",tipo:"programa",emoji:"🌿",titulo:"Anillo Verde CDMX",exp:"Leer Xochimilco, Sierra de Guadalupe y cerros como un solo cinturón verde conectado.",porque:"Une tus ANP dispersas en una sola narrativa potente.",innov:4,dif:4,imp:4,ref:"Anillo Verde, Vitoria-Gasteiz",tech:"SIG de conectividad, indicadores por tramo",cdmx:"Un mapa-manifiesto del Anillo Verde como pieza de comunicación.",arranque:"Dibuja la conexión entre las ANP existentes.",tags:["conectividad","ANP","territorio"]},
+  {id:"i10",tipo:"programa",emoji:"🏫",titulo:"Patios Oasis",exp:"Desimpermeabilizar y revegetar patios escolares como refugios climáticos de barrio.",porque:"Alto impacto social, bajo conflicto, muy replicable.",innov:3,dif:3,imp:4,ref:"Cours Oasis, París",tech:"Materiales permeables, sombra, agua",cdmx:"Piloto en 3 escuelas de zonas calurosas.",arranque:"Selecciona una escuela y mide su temperatura de patio.",tags:["clima","escuelas","agua"]},
+
+  {id:"i11",tipo:"accion",emoji:"🤝",titulo:"Pacto por el Arbolado (16 alcaldías)",exp:"Firmarlo con metas verificables y mesa de seguimiento, no como foto.",porque:"Ya lo redactaste; falta la acción de firma y gobernanza.",innov:3,dif:3,imp:5,ref:"—",tech:"Tablero de cumplimiento, minutas",cdmx:"Primera Mesa Técnica con enlaces designados.",arranque:"Convoca y define los 6 indicadores mínimos del pacto.",tags:["gobernanza","alcaldías","arbolado"]},
+  {id:"i12",tipo:"accion",emoji:"🔭",titulo:"Reto Naturalista permanente",exp:"Bioblitz trimestrales en ANP urbanas que alimentan el SIA, no solo en abril.",porque:"Convierte un evento anual en flujo continuo de datos.",innov:3,dif:2,imp:4,ref:"City Nature Challenge",tech:"iNaturalistMX, API, capas SIG",cdmx:"Calendario anual de 4 jornadas con sedes fijas.",arranque:"Agenda la próxima jornada y elige 2 ANP sede.",tags:["ciencia ciudadana","datos","biodiversidad"]},
+  {id:"i13",tipo:"accion",emoji:"🚲",titulo:"Corredor Verde Temporal",exp:"Cierre dominical de una vía con sombra, agua y vegetación móvil.",porque:"Prueba barata de espacio público climático.",innov:3,dif:2,imp:3,ref:"Superilles, Barcelona",tech:"Mobiliario móvil, jardineras, medición de aforo",cdmx:"Un domingo piloto en una calle candidata.",arranque:"Elige la calle y los aliados locales.",tags:["espacio público","clima","movilidad"]},
+  {id:"i14",tipo:"accion",emoji:"🛶",titulo:"Piloto de Capacidad de Carga (Xochimilco)",exp:"Unir tu trabajo de NMX-AA-189 + SECTEI en una acción demostrativa de aforo y umbral.",porque:"Aterriza tu proyecto de capacidad de carga turística.",innov:4,dif:3,imp:4,ref:"—",tech:"NMX-AA-189, conteo, análisis estadístico",cdmx:"Un fin de semana de medición en EXSGA/Xochimilco.",arranque:"Define puntos de conteo y umbral preliminar.",tags:["turismo","ANP","metodología"]},
+  {id:"i15",tipo:"accion",emoji:"🏷️",titulo:"QR Patrimonial",exp:"Cada árbol patrimonial con un QR que cuenta su historia, edad y especie.",porque:"Patrimonio + participación + comunicación, casi sin presupuesto.",innov:3,dif:1,imp:3,ref:"—",tech:"QR, ficha web, geolocalización",cdmx:"10 árboles emblemáticos como prueba.",arranque:"Genera las fichas de 10 árboles y sus QR.",tags:["patrimonio","rápido","comunicación"]},
+
+  {id:"i16",tipo:"app",emoji:"📱",titulo:'App "Árbol en Riesgo"',exp:"Reporte ciudadano geolocalizado que clasifica el riesgo y enruta según la NADF-001.",porque:"Cierra la brecha que tu tabla de atribuciones deja ver.",innov:4,dif:3,imp:5,ref:"—",tech:"App ligera, geolocalización, flujo de dictamen",cdmx:"Flujo ciudadano → alcaldía → SEDEMA con seguimiento.",arranque:"Mapea el flujo de atención y los responsables.",tags:["NADF-001","ciudadanía","arbolado"]},
+  {id:"i17",tipo:"app",emoji:"🌡️",titulo:"Visor de Calor Urbano",exp:"Mapa de islas de calor cruzado con déficit de área verde para priorizar dónde plantar.",porque:"Sostiene política, programa y narrativa de Informe a la vez.",innov:4,dif:3,imp:5,ref:"—",tech:"Teledetección, PostGIS, visor web",cdmx:"Cruzar temperatura superficial + áreas verdes.",arranque:"Junta las dos capas que ya existen y publícalas.",tags:["clima","SIG","priorización"]},
+  {id:"i18",tipo:"app",emoji:"🤖",titulo:"Chatbot Ley Ambiental → producción",exp:"Llevar tu prototipo a despliegue interno con control de versiones de la ley.",porque:"Tu prototipo ya validó; falta escalarlo.",innov:4,dif:3,imp:4,ref:"—",tech:"RAG, hosting institucional, versionado",cdmx:"Herramienta interna para servidores públicos.",arranque:"Define hosting y responsable de actualización normativa.",tags:["IA","normatividad","servidores públicos"]},
+  {id:"i19",tipo:"app",emoji:"🌳",titulo:"Mapa Colaborativo de Sombra",exp:"Ruta peatonal más fresca según arbolado; la gente reporta puntos sin sombra.",porque:"Movilidad, salud y priorización de plantación en un solo gesto.",innov:3,dif:2,imp:3,ref:"—",tech:"Mapa web, capa de arbolado, reporte ciudadano",cdmx:"Piloto en un corredor peatonal concurrido.",arranque:"Publica la capa de arbolado + un botón de reporte.",tags:["salud","movilidad","participación"]},
+  {id:"i20",tipo:"app",emoji:"🗳️",titulo:"Presupuesto Participativo Verde",exp:"La gente vota sobre el mapa dónde plantar o intervenir, sobre la capa de déficit.",porque:"Cruce inesperado: datos espaciales × participación ciudadana.",innov:4,dif:3,imp:4,ref:"—",tech:"Mapa interactivo, votación, SIG",cdmx:"Una alcaldía piloto en su jornada participativa.",arranque:"Define el polígono y las opciones votables.",tags:["participación","datos","gobernanza"]},
+
+  {id:"i21",tipo:"web",emoji:"📊",titulo:"Tablero Público del Pacto",exp:"Cumplimiento por alcaldía, actualización trimestral, ligado al Geoportal.",porque:"Vuelve auditable tu Pacto por el Arbolado.",innov:3,dif:3,imp:4,ref:"—",tech:"Dashboard web, datos abiertos",cdmx:"Tablero con 6 indicadores por alcaldía.",arranque:"Define los 6 indicadores mínimos.",tags:["transparencia","arbolado","gobernanza"]},
+  {id:"i22",tipo:"web",emoji:"🟢",titulo:"Portal de Áreas Verdes m²/hab",exp:"Indicador interactivo navegable por alcaldía y colonia, con descarga abierta.",porque:"Transparencia que también te sirve de diagnóstico.",innov:3,dif:3,imp:3,ref:"—",tech:"Visor web, datos abiertos",cdmx:"Publicar el indicador por colonia.",arranque:"Reúne el dato base de área verde por unidad territorial.",tags:["transparencia","datos","áreas verdes"]},
+  {id:"i23",tipo:"web",emoji:"🗺️",titulo:"Geoportal: capas prioritarias",exp:"Publicar 3 capas clave con metadatos completos y acceso por API.",porque:"Da un salto visible a tu Geoportal con poco esfuerzo.",innov:3,dif:2,imp:4,ref:"—",tech:"Geoserver, metadatos, API",cdmx:"Arbolado, áreas verdes y ANP como primeras capas.",arranque:"Elige 3 capas y completa sus metadatos.",tags:["geoportal","datos abiertos","SIG"]},
+  {id:"i24",tipo:"web",emoji:"📈",titulo:"Observatorio del Arbolado",exp:"Tablero abierto: plantados, vivos a 24 meses, dictámenes NADF, cumplimiento.",porque:"Cambia la conversación a árboles vivos, no plantados.",innov:3,dif:3,imp:4,ref:"—",tech:"Dashboard, captura en campo, SIG",cdmx:"Indicador de sobrevivencia como métrica rectora.",arranque:"Define la fuente de captura de sobrevivencia.",tags:["transparencia","restauración","indicadores"]},
+  {id:"i25",tipo:"web",emoji:"🧊",titulo:"Gemelo Digital Verde CDMX",exp:"Réplica 3D viva de la infraestructura verde con capas de calor, agua y biodiversidad.",porque:"La evolución natural de tu SIA/Geoportal hacia prospectiva.",innov:5,dif:4,imp:4,ref:"Virtual Singapore",tech:"CesiumJS, 3D Tiles, PostGIS",cdmx:"Capa piloto en 3D de Chapultepec.",arranque:"Monta un demo 3D con capas que ya tienes.",tags:["3D","SIG","prospectiva"]},
+
+  {id:"i26",tipo:"script",emoji:"📋",titulo:"Hoja de Sobrevivencia Arbórea 12/24m",exp:"Sheets con captura en campo y tablero automático de sobrevivencia post-plantación.",porque:"El indicador que vuelve serio cualquier programa de plantación.",innov:3,dif:2,imp:5,ref:"—",tech:"Google Sheets, Apps Script, formularios",cdmx:"Estándar de seguimiento para toda plantación.",arranque:"Diseña el formato de captura georreferenciada.",tags:["Sheets","indicadores","restauración"]},
+  {id:"i27",tipo:"script",emoji:"📄",titulo:"Generador de Oficios (Apps Script)",exp:"De plantilla en Docs a PDF con folio, acuse y registro automático.",porque:"Te ahorra horas en tu gestión institucional diaria.",innov:3,dif:2,imp:3,ref:"—",tech:"Apps Script, Docs API, Drive",cdmx:"Estándar de oficios de tu oficina.",arranque:"Crea la plantilla base y la lógica de folio.",tags:["Apps Script","automatización","gestión"]},
+  {id:"i28",tipo:"script",emoji:"⚖️",titulo:"Radar Jurídico Inteligente",exp:"Lee tu Boletín diario, detecta términos clave y te manda un digest priorizado.",porque:"Convierte tu lectura del Boletín en vigilancia activa.",innov:4,dif:2,imp:4,ref:"—",tech:"Apps Script, Gmail API, reglas de palabras",cdmx:"Alertas automáticas sobre tu mandato ambiental.",arranque:"Haz una lista de 20 términos disparadores.",tags:["Apps Script","legislativo","alertas"]},
+  {id:"i29",tipo:"script",emoji:"🔄",titulo:"Sincronizador iNaturalist → Sheets → Mapa",exp:"Jala observaciones grado-investigación vía API a una hoja viva que alimenta un mapa.",porque:"Ciencia ciudadana convertida en dato institucional, sin manos.",innov:4,dif:3,imp:4,ref:"—",tech:"API iNaturalist, Apps Script, mapa web",cdmx:"Capa de biodiversidad siempre actualizada.",arranque:"Prueba el endpoint de iNaturalist para CDMX.",tags:["Apps Script","datos","biodiversidad"]},
+  {id:"i30",tipo:"script",emoji:"🔓",titulo:"Convenios → dato abierto automático",exp:"Cada convenio firmado se publica solo como entrada de datos abiertos.",porque:"Cruce: automatización × gobernanza, desde tu Panel de Convenios.",innov:4,dif:3,imp:3,ref:"—",tech:"Apps Script, Sheets, publicación web",cdmx:"Transparencia automática de convenios SEDEMA.",arranque:"Define los campos públicos del convenio.",tags:["Apps Script","convenios","transparencia"]},
+
+  {id:"i31",tipo:"internacional",emoji:"🌆",img:"https://loremflickr.com/640/280/medellin,colombia,city?lock=11",titulo:"Corredores Verdes",exp:"30 corredores de vegetación que bajaron la temperatura urbana cerca de 2 °C.",porque:"Modelo replicable para tus ejes viales y de arbolado.",innov:4,dif:4,imp:5,ref:"Medellín, Colombia",tech:"Arbolado lineal, riego, mantenimiento",cdmx:"Piloto en una avenida con alta isla de calor.",arranque:"Elige un corredor vial candidato y mídelo.",tags:["clima","arbolado","infraestructura verde"]},
+  {id:"i32",tipo:"internacional",emoji:"🏞️",img:"https://loremflickr.com/640/280/seoul,stream,river?lock=22",titulo:"Restauración del Cheonggyecheon",exp:"Demolieron una vía elevada para resucitar un río urbano hoy lleno de vida.",porque:"La metáfora perfecta para tu agenda hídrica de Xochimilco.",innov:5,dif:5,imp:5,ref:"Seúl, Corea",tech:"Restauración hidrológica, diseño urbano",cdmx:"Identificar un canal entubado candidato a 'destape'.",arranque:"Mapea ríos/canales entubados con potencial.",tags:["agua","restauración","espacio público"]},
+  {id:"i33",tipo:"internacional",emoji:"🌳",img:"https://loremflickr.com/640/280/milano,architecture,green?lock=33",titulo:"ForestaMi",exp:"Estrategia metropolitana con meta de 3 millones de árboles al 2030.",porque:"Referencia de meta dura + gobernanza multiactor para tu Pacto.",innov:4,dif:4,imp:4,ref:"Milán, Italia",tech:"Gobernanza, metas, financiamiento mixto",cdmx:"Una meta arbórea metropolitana medible.",arranque:"Define una meta de árboles vivos al 2030.",tags:["arbolado","metas","gobernanza"]},
+  {id:"i34",tipo:"internacional",emoji:"🟦",img:"https://loremflickr.com/640/280/barcelona,street,city?lock=44",titulo:"Supermanzanas",exp:"Reorganizar manzanas para recuperar el espacio público con ejes verdes y peatones.",porque:"Modelo de transformación territorial replicable por barrio.",innov:5,dif:4,imp:5,ref:"Barcelona, España",tech:"Diseño urbano, movilidad, vegetación",cdmx:"Una supermanzana piloto en colonia densa.",arranque:"Selecciona un polígono de 3x3 manzanas.",tags:["espacio público","movilidad","clima"]},
+  {id:"i35",tipo:"internacional",emoji:"🎙️",img:"https://loremflickr.com/640/280/forest,bird,nature?lock=55",titulo:"Monitoreo acústico con IA",exp:"Medir el éxito de la restauración escuchando cantos de aves con IA.",porque:"Cruce: tecnología × restauración. Métrica viva, no foto.",innov:5,dif:3,imp:4,ref:"Proyectos de bioacústica global",tech:"Grabadoras, IA de audio, índice acústico",cdmx:"Piloto en un sitio en restauración.",arranque:"Coloca grabadores en una zona y compara meses.",tags:["restauración","IA","monitoreo"]},
+];
+
+/* ---------- Estado ---------- */
+let FRESH = []; // ideas generadas por IA (ideas.json), si existen
+let state = { tab:"semana", filtro:"todos", q:"", favs:[], prefs:{tipos:{},tags:{}}, shuffleSeed:0 };
+
+function load(){
+  try{ const f=JSON.parse(localStorage.getItem("radar:favs")); if(Array.isArray(f)) state.favs=f; }catch(e){}
+  try{ const p=JSON.parse(localStorage.getItem("radar:prefs")); if(p&&p.tipos) state.prefs=p; }catch(e){}
+}
+function save(){
+  try{ localStorage.setItem("radar:favs", JSON.stringify(state.favs)); localStorage.setItem("radar:prefs", JSON.stringify(state.prefs)); }catch(e){}
+}
+const isFav = id => state.favs.includes(id);
+const byId = id => IDEAS.find(x=>x.id===id);
+
+function toggleFav(id){
+  const it=byId(id); if(!it) return;
+  if(isFav(id)){
+    state.favs=state.favs.filter(x=>x!==id);
+    state.prefs.tipos[it.tipo]=Math.max(0,(state.prefs.tipos[it.tipo]||0)-1);
+    (it.tags||[]).forEach(t=>state.prefs.tags[t]=Math.max(0,(state.prefs.tags[t]||0)-1));
+  }else{
+    state.favs=[id,...state.favs];
+    state.prefs.tipos[it.tipo]=(state.prefs.tipos[it.tipo]||0)+1;
+    (it.tags||[]).forEach(t=>state.prefs.tags[t]=(state.prefs.tags[t]||0)+1);
+  }
+  save(); render();
+}
+function afinidad(it){ let s=(state.prefs.tipos[it.tipo]||0)*2; (it.tags||[]).forEach(t=>s+=(state.prefs.tags[t]||0)); return s; }
+
+/* ---------- Rotación semanal automática ---------- */
+function isoWeek(d){ const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const dn=(t.getUTCDay()+6)%7; t.setUTCDate(t.getUTCDate()-dn+3); const f=new Date(Date.UTC(t.getUTCFullYear(),0,4)); return 1+Math.round(((t-f)/86400000-3+((f.getUTCDay()+6)%7))/7); }
+function semanaActual(){ const w=isoWeek(new Date()); const base=(w*3)%IDEAS.length; return [0,1,2].map(k=>IDEAS[(base+k)%IDEAS.length]); }
+function rangoSemana(){ const meses=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"]; const n=new Date(); const day=(n.getDay()+6)%7; const ini=new Date(n); ini.setDate(n.getDate()-day); const fin=new Date(ini); fin.setDate(ini.getDate()+6); return `${ini.getDate()} ${meses[ini.getMonth()]} – ${fin.getDate()} ${meses[fin.getMonth()]}`; }
+
+/* ---------- Render ---------- */
+function dots(n){ let s=""; for(let i=0;i<5;i++) s+= i<n?"●":"○"; return s; }
+function meterColor(n){ return n>=4?"#43a047":n>=3?"#fb8c00":"#9aa39d"; }
+
+function cardHTML(it){
+  const t=TIPOS[it.tipo];
+  return `<article class="card" onclick="openModal('${it.id}')">
+    <div class="chead" style="background:linear-gradient(135deg,${t.c1},${t.c2})">
+      ${it.img?`<img class="cphoto" src="${it.img}" alt="" onerror="this.remove()">`:`<span class="cemoji">${it.emoji}</span>`}
+      <span class="ctype">${t.label}</span>
+    </div>
+    <div class="cbody">
+      <h3 class="ctitle">${it.titulo}</h3>
+      ${it.ref&&it.ref!=="—"?`<div class="cref">📍 ${it.ref}</div>`:""}
+      <p class="cexp">${it.exp}</p>
+      <div class="meters">
+        <div class="meter">Innov.<div class="dots" style="color:${meterColor(it.innov)}">${dots(it.innov)}</div></div>
+        <div class="meter">Dificultad<div class="dots" style="color:${meterColor(6-it.dif)}">${dots(it.dif)}</div></div>
+        <div class="meter">Impacto<div class="dots" style="color:${meterColor(it.imp)}">${dots(it.imp)}</div></div>
+      </div>
+      <div class="cfoot">
+        <div class="ctags">${(it.tags||[]).slice(0,2).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+        <button class="heart" onclick="event.stopPropagation();toggleFav('${it.id}')">${isFav(it.id)?"❤️":"🤍"}</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function gridHTML(items, emptyMsg){
+  if(!items.length) return `<div class="grid"><div class="empty"><div class="disp">Nada por aquí todavía</div><div>${emptyMsg||""}</div></div></div>`;
+  return `<div class="grid">${items.map(cardHTML).join("")}</div>`;
+}
+
+function render(){
+  // Nav
+  const counts = state.favs.length;
+  document.getElementById("nav").innerHTML = [
+    ["semana","✨ Esta semana"],["explorar","🧭 Explorar"],
+    ["guardados",`❤️ Guardados${counts?`<span class="ct">${counts}</span>`:""}`],["parati","🎯 Para ti"]
+  ].map(([k,l])=>`<button class="navb ${state.tab===k?"on":""}" onclick="setTab('${k}')">${l}</button>`).join("");
+
+  const view=document.getElementById("view");
+
+  if(state.tab==="semana"){
+    const fresh = FRESH.length>0;
+    const items = fresh ? FRESH.slice(0,6) : semanaActual();
+    const txt = fresh
+      ? `Recién generadas con IA para el ${rangoSemana()}. Se renuevan solas cada lunes. ¿Alguna te late? Guárdala con ❤️.`
+      : `Seleccionadas automáticamente para el ${rangoSemana()}. La próxima semana cambian solas. ¿Alguna te late? Guárdala con ❤️.`;
+    view.innerHTML = `<div class="banner"><h2>✨ Tus ideas de esta semana</h2><p>${txt}</p></div>` + gridHTML(items);
+  }
+  else if(state.tab==="explorar"){
+    const matches = it => {
+      if(state.q.trim()){ const s=(it.titulo+" "+it.exp+" "+(it.tags||[]).join(" ")+" "+(it.ref||"")).toLowerCase(); if(!s.includes(state.q.toLowerCase())) return false; }
+      return true;
+    };
+    const controls = `<div class="controls">
+        <input class="search" placeholder="Buscar idea, tema, ciudad…" value="${state.q}" oninput="onSearch(this.value)">
+        <button class="shuffle" onclick="doShuffle()">🎲 Sorpréndeme</button>
+      </div>
+      <div class="chips">
+        <button class="chip ${state.filtro==="todos"?"on":""}" style="${state.filtro==="todos"?"background:#243430":""}" onclick="setFiltro('todos')">Todos</button>
+        ${ORDEN.map(k=>`<button class="chip ${state.filtro===k?"on":""}" style="${state.filtro===k?`background:linear-gradient(135deg,${TIPOS[k].c1},${TIPOS[k].c2})`:""}" onclick="setFiltro('${k}')">${TIPOS[k].label}</button>`).join("")}
+      </div>`;
+
+    let body="";
+    if(state.filtro==="todos"){
+      body = ORDEN.map(k=>{
+        let items=IDEAS.filter(it=>it.tipo===k && matches(it));
+        if(state.shuffleSeed) items.sort(()=>Math.random()-0.5);
+        if(!items.length) return "";
+        const shown=items.slice(0,3);
+        return `<div class="section">
+          <div class="sechead">
+            <span class="secdot" style="background:linear-gradient(135deg,${TIPOS[k].c1},${TIPOS[k].c2})"></span>
+            <h2 class="sectitle">${TIPOS[k].label}</h2>
+            ${items.length>3?`<button class="vermas" onclick="setFiltro('${k}')">Ver todas (${items.length}) →</button>`:""}
+          </div>${gridHTML(shown)}</div>`;
+      }).join("");
+      if(!body.trim()) body=gridHTML([],"Ajusta la búsqueda.");
+    } else {
+      let items=IDEAS.filter(it=>it.tipo===state.filtro && matches(it));
+      if(state.shuffleSeed) items.sort(()=>Math.random()-0.5);
+      body = gridHTML(items,"Ajusta la búsqueda.");
+    }
+    view.innerHTML = controls + body;
+  }
+  else if(state.tab==="guardados"){
+    const items=state.favs.map(byId).filter(Boolean);
+    view.innerHTML = `<div class="banner"><h2>❤️ Proyectos Guardados</h2><p>Tu colección permanente. Vive en este navegador.</p></div>` + gridHTML(items,"Marca ideas con 🤍 para guardarlas aquí.");
+  }
+  else if(state.tab==="parati"){
+    const tienePerfil = Object.values(state.prefs.tipos).some(v=>v>0);
+    const ranked = IDEAS.filter(it=>!isFav(it.id)).map(it=>({it,a:afinidad(it)})).filter(x=>x.a>0).sort((a,b)=>b.a-a.a).slice(0,9).map(x=>x.it);
+    let head="";
+    if(tienePerfil){
+      const topTipo = Object.entries(state.prefs.tipos).sort((a,b)=>b[1]-a[1])[0];
+      const topTags = Object.entries(state.prefs.tags).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,6);
+      head = `<div class="profile"><h2>🎯 Lo que he aprendido de ti</h2>
+        <p style="color:var(--soft);margin:0 0 8px">Te atraen sobre todo las ideas de <b>${TIPOS[topTipo[0]].label}</b>. Estas se parecen a lo que guardas:</p>
+        <div class="ctags">${topTags.map(([t])=>`<span class="tag">${t}</span>`).join("")}</div></div>`;
+    }else{
+      head = `<div class="profile"><h2>🎯 Para ti</h2><p style="color:var(--soft);margin:0">Guarda algunas ideas con 🤍 en <b>Explorar</b> y aquí te mostraré recomendaciones a tu medida.</p></div>`;
+    }
+    view.innerHTML = head + gridHTML(ranked,"Guarda algunas ideas para activar tus recomendaciones.");
+  }
+}
+
+/* ---------- Modal ---------- */
+function openModal(id){
+  const it=byId(id), t=TIPOS[it.tipo];
+  document.getElementById("modal").innerHTML = `
+    <div class="mhead" style="background:linear-gradient(135deg,${t.c1},${t.c2})">
+      ${it.img?`<img class="cphoto" src="${it.img}" alt="" onerror="this.remove()">`:`<span class="cemoji">${it.emoji}</span>`}
+      <button class="mclose" onclick="closeModal()">×</button>
+    </div>
+    <div class="mbody">
+      <div class="mtype" style="color:${t.c1}">${t.label}</div>
+      <div class="mtitle">${it.titulo}</div>
+      ${it.ref&&it.ref!=="—"?`<div class="mref">📍 ${it.ref}</div>`:""}
+      <div class="field"><div class="val">${it.exp}</div></div>
+      <div class="mmeters">
+        <div class="meter">Innovación<div class="dots" style="color:${meterColor(it.innov)}">${dots(it.innov)}</div></div>
+        <div class="meter">Dificultad<div class="dots" style="color:${meterColor(6-it.dif)}">${dots(it.dif)}</div></div>
+        <div class="meter">Impacto<div class="dots" style="color:${meterColor(it.imp)}">${dots(it.imp)}</div></div>
+      </div>
+      <div class="field"><div class="lab">Por qué te interesa</div><div class="val">${it.porque}</div></div>
+      <div class="field"><div class="lab">Aplicación en CDMX</div><div class="val">${it.cdmx}</div></div>
+      <div class="field"><div class="lab">Tecnologías / herramientas</div><div class="val">${it.tech}</div></div>
+      <div class="field"><div class="lab">Cómo arrancar</div><div class="val">${it.arranque}</div></div>
+      ${it.tipo==="internacional"?`<button class="mgoogle" onclick="googleSearch('${it.id}')">🔎 Buscar este proyecto en Google</button>`:""}
+      <button class="msave ${isFav(it.id)?"saved":""}" onclick="toggleFav('${it.id}');openModal('${it.id}')">${isFav(it.id)?"❤️ Guardado":"🤍 Guardar en mi colección"}</button>
+    </div>`;
+  document.getElementById("overlay").classList.add("on");
+}
+function closeModal(){ document.getElementById("overlay").classList.remove("on"); }
+function googleSearch(id){ const it=byId(id); if(!it) return; const q=encodeURIComponent(it.titulo+" "+(it.ref&&it.ref!=="—"?it.ref:"")+" proyecto"); window.open("https://www.google.com/search?q="+q,"_blank"); }
+
+/* ---------- Acciones ---------- */
+function setTab(t){ state.tab=t; state.shuffleSeed=0; render(); window.scrollTo({top:0,behavior:"smooth"}); }
+function setFiltro(f){ state.filtro=f; render(); }
+function onSearch(v){ state.q=v; render(); const i=document.querySelector(".search"); if(i){i.focus(); i.setSelectionRange(v.length,v.length);} }
+function doShuffle(){ state.shuffleSeed=Date.now(); render(); }
+function iaInfo(){
+  alert("✨ Actualización con IA\n\nCuando conectes tu API key de Claude, este botón generará ideas NUEVAS cada lunes en automático, según tus gustos.\n\nPor ahora, el cambio semanal ya funciona solo (pestaña 'Esta semana').\n\nSiguiente paso: sacar la API key + cargar saldo con tope.");
+  /* TODO API: aquí va el fetch a https://api.anthropic.com/v1/messages
+     con tu API key (vía Apps Script para no exponerla en el navegador). */
+}
+
+/* ---------- Init ---------- */
+async function init(){
+  load();
+  try{
+    if (window.google && google.script && google.script.run){
+      // Contexto Google Apps Script: pedir ideas al servidor
+      await new Promise(res=>{
+        google.script.run
+          .withSuccessHandler(d=>{ if(d && d.length){ FRESH=d; IDEAS.unshift(...d); } res(); })
+          .withFailureHandler(()=>res())
+          .getIdeas();
+      });
+    } else {
+      // Contexto GitHub Pages u otro hosting: leer ideas.json
+      const r = await fetch("ideas.json?_=" + Date.now());
+      if(r.ok){ const d = await r.json(); if(d && Array.isArray(d.items) && d.items.length){ FRESH = d.items; IDEAS.unshift(...d.items); } }
+    }
+  }catch(e){ /* sin ideas aún: usa la rotación local */ }
+  render();
+}
+init();
+</script>
+</body>
+</html>
