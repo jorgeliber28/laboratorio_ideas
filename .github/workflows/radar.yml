@@ -2,11 +2,11 @@ name: Radar semanal
 
 on:
   schedule:
-    - cron: "0 14 * * 1"   # cada lunes 14:00 UTC ≈ 8:00 a.m. en CDMX
-  workflow_dispatch:        # permite correrlo a mano con un botón
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
 
 permissions:
-  contents: write           # para que el robot pueda guardar ideas.json
+  contents: write
 
 jobs:
   generar:
